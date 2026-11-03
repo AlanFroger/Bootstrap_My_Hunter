@@ -6,18 +6,27 @@
 */
 
 #include "my.h"
+#include <stdio.h>
 #include <CSFML/Graphics.h>
 
 void display_window(sfRenderWindow *window)
 {
     sfEvent event;
-    sfTexture *texture = sfTexture_createFromFile("spritesheet.png", NULL);
-    sfSprite *sprite;
+    sfVector2u window_size = sfRenderWindow_getSize(window);
+    duck_t duck1;
+    int nb;
 
+    nb = rand() % (window_size.y - 110);
+    init_duck(&duck1, "spritesheet.png", nb);
+    create_sprite(window, event, &duck1, nb);
     while (sfRenderWindow_isOpen(window)){
-        analyse_events(window, event);
-        create_sprite("spritesheet.png", window, texture, event);
-        sfRenderWindow_display(window);
+        nb = rand() % (window_size.y - 110);
+        duck1.position.x = 0;
+        duck1.position.y = nb;
+        sfSprite_setPosition(duck1.sprite,
+            (sfVector2f){duck1.position.x, duck1.position.y});
+        create_sprite(window, event, &duck1, nb);
     }
+    sfSprite_destroy(duck1.sprite);
     sfRenderWindow_destroy(window);
 }
